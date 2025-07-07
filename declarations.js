@@ -1,4 +1,4 @@
-const escapeStr = "Hello\n`World`/my name is 'Andrew'."
+const escapeStr = "\"`/\\'"
 const arr = Object.freeze([4, '2'])
 const obj = Object.freeze({
     str: "Hello, World!",
