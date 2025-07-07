@@ -7,7 +7,7 @@ function dogYears(planet,seconds) {
         jupiter: 11.862615,
         saturn: 29.447498,
         uranus: 84.016846,
-        nepture: 164.79132
+        neptune: 164.79132
     };
 
     const Earth_Year_Seconds = 31557600; // seconds in one Earth year
