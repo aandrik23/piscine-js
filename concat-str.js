@@ -1,4 +1,5 @@
-const a = "hello";
-const b = "world";
-const result = a.concat(" ", b);
-console.log(result);
+function concatStr(a, b) {
+    return a + b;
+}
+
+console.log(concatStr("hello", " world"));
