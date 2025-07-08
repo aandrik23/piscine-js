@@ -10,5 +10,6 @@ function getAcceleration(obj) {
     if (typeof obj.d === 'number' && typeof obj.t === 'number' && obj.t !== 0) {
         return (2 * obj.d) / (obj.t * obj.t);
     }
+    
     return "impossible";
 }
