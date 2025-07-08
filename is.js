@@ -1,6 +1,6 @@
 const is = {};
 is.num = function(x) {
-    return typeof x === 'number' && x === x;
+    return typeof x === 'number';
 };
 is.nan = function(x) {
     return x !== x;
