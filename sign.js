@@ -8,6 +8,14 @@ function sign(num) {
     }
 }
 
+function sameSign(num1, num2) {
+    return sign(num1) === sign(num2);
+}
+
 console.log(sign(5));
 console.log(sign(-5));
 console.log(sign(0));
+console.log(sameSign(3, 5));
+console.log(sameSign(-3,5));
+console.log(sameSign(-3,-5));
+console.log(sameSign(0,0));
