@@ -1,9 +1,9 @@
 const is = {};
 is.num = function(x) {
-    return typeof x === 'number' && !Number.isNaN(x);
+    return typeof x === 'number' && x === x;
 };
 is.nan = function(x) {
-    return Number.isNaN(x);
+    return x !== x;
 };
 is.str =  function(x) {
     return typeof x === 'string';
