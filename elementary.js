@@ -30,7 +30,7 @@ const modulo = (a, b) => {
     }
     
    const quotient = divide(a, b);
-   const product = multiply(a, b);
+   const product = multiply(quotient, b);
    return a - product;
 };
 
