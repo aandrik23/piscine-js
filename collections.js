@@ -30,13 +30,13 @@ const superTypeOf = value => {
     if (value instanceof Map) return 'Map';
     if (value instanceof Set) return 'Set';
     if (Array.isArray(value)) return 'Array';
-
-    const rawType = typeof value;
-    if (rawType === 'object') {
-        return Object.prototype.toString.call(value).slice(8, -1).toLowerCase();
+    if (typeof value === 'object') {
+      return Object.prototype.toString.call(value).slice(8, -1);
     }
-    return rawType[0].toUpperCase() + rawType.slice(1);
-}
+  
+    const type = typeof value;
+    return type.charAt(0).toUpperCase() + type.slice(1);
+};
 
 
 console.log(arrToSet(arr));
@@ -57,6 +57,7 @@ console.log(superTypeOf(str));
 console.log(superTypeOf(666));       
 console.log(superTypeOf(NaN));         
 console.log(superTypeOf(arr));         
-console.log(superTypeOf(null));        
+console.log(superTypeOf(null));   
+console.log(superTypeOf({}))     
 console.log(superTypeOf(undefined));   
 console.log(superTypeOf(superTypeOf)); 
