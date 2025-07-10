@@ -1,24 +1,43 @@
 const trunc = n => {
-    return n < 0 ? n - (n % 1) - 1 + 1 : n - (n % 1);
+    let i = 0;
+    if (n >= 0) {
+      while (i + 1 <= n) i++;
+    } else {
+      while (i - 1 >= n) i--;
+    }
+    return i;
   };
   
   const floor = n => {
-    const int = n - (n % 1);
-    return n < 0 && n !== int ? int - 1 : int;
+    let i = 0;
+    if (n >= 0) {
+      while (i + 1 <= n) i++;
+    } else {
+      while (i - 1 > n) i--;
+      if (i > n) i--;
+    }
+    return i;
   };
+  
   
   const ceil = n => {
-    const int = n - (n % 1);
-    return n > 0 && n !== int ? int + 1 : int;
+    let i = 0;
+    if (n >= 0) {
+      while (i < n) i++;
+    } else {
+      while (i - 1 >= n) i--;
+    }
+    return i;
   };
   
+  
   const round = n => {
-    const int = n - (n % 1);
-    const frac = n - int;
+    let i = trunc(n);
+    const frac = n - i;
     if (n >= 0) {
-      return frac >= 0.5 ? int + 1 : int;
+      return frac >= 0.5 ? i + 1 : i;
     } else {
-      return frac <= -0.5 ? int - 1 : int;
+      return frac <= -0.5 ? i - 1 : i;
     }
   };
-
+  
