@@ -1,18 +1,21 @@
-const flat = arr => {
+const flat = (arr, depth = 1) => {
     const result = [];
+  
     for (let i = 0; i < arr.length; i++) {
-        const item = arr[i];
-        if (Array.isArray(item)) {
-            for (let j = 0; j < item.length; j++) {
-                result.push(item[j]);
-            }
-            } else {
-            result.push(item);
+      const el = arr[i];
+  
+      if (Array.isArray(el) && depth > 0) {
+       
+        result.push(...flat(el, depth - 1));
+      } else {
+        result.push(el);
+      }
     }
-}
-return result;
-};
+  
+    return result;
+  };
 
 console.log(flat([1, 2, [3, 4], 5])); 
 console.log(flat([[1, 2], [3, 4], [5]])); 
-console.log(flat([[1, 2], 3, [4, 5]])); 
+console.log(flat([[1, 2], 3, [4, 5]]));
+console.log(flat([1, [2, [3], [4, [5]]]], 2));
