@@ -1,23 +1,24 @@
 const findExpression = (target) => {
-    const queue = [{ value: 1, path: '1' }];
+    const ops = [
+      { symbol: add4, apply: x => x + (add4.length - 2) }, 
+      { symbol: mul2, apply: x => x * (mul2.length - 1) }, 
+    ];
   
-    const apply = {
-      [add4]: x => x + (add4 === '+4' ? 4 : NaN),
-      [mul2]: x => x * (mul2 === '*2' ? 2 : NaN),
-    };
+    const queue = [{ value: 1, path: '1' }];
   
     while (queue.length) {
       const { value, path } = queue.shift();
       if (value === target) return path;
       if (value > target) continue;
   
-      for (const op in apply) {
-        queue.push({ value: apply[op](value), path: path + ' ' + op });
+      for (const { symbol, apply } of ops) {
+        queue.push({ value: apply(value), path: path + ' ' + symbol });
       }
     }
   
     return undefined;
   };
+  
 
 console.log(findExpression(8));   
 console.log(findExpression(15));  
