@@ -1,5 +1,3 @@
-const add4 = '+4';
-const mul2 = '*2';
 
 const findExpression = (target) => {
   const queue = [{ value: 1, path: '1' }];
