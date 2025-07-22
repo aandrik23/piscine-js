@@ -23,11 +23,19 @@ function filterValues(obj, callback) {
   
   function reduceValues(obj, callback, initialValue) {
     let accumulator = initialValue;
+  
     for (let key in obj) {
       if (Object.prototype.hasOwnProperty.call(obj, key)) {
-        accumulator = callback(accumulator, obj[key]);
+        let value = obj[key];
+  
+        if (typeof value === "object" && value !== null && !Array.isArray(value)) {
+          value = reduceValues(value, callback, initialValue);
+        }
+  
+        accumulator = callback(accumulator, value);
       }
     }
+  
     return accumulator;
-  }  
-
+  }
+  
