@@ -40,3 +40,9 @@ console.log(mapValues(nutrients, (v) => v + 1));
 
 console.log(reduceValues(nutrients, (acc, curr) => acc + curr, 0));
 
+
+
+const total = reduceValues(ctx.groceriesCart, (acc, cr) => {
+    return acc + reduceValues(cr, (a, b) => a + b, 0);
+  }, 0);
+console.log(total);  
