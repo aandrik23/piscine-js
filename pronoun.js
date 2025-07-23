@@ -1,6 +1,6 @@
 function pronoun(str) {
     const pronouns = ['i', 'you', 'he', 'she', 'it', 'we', 'they'];
-    const words = str.toLowerCase().split(' ');
+    const words = str.toLowerCase().split(/\W/g).filter(x => x !== '');
     const result = {};
 
     for (let i = 0; i < words.length; i++) {
