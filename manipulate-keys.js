@@ -4,8 +4,8 @@ const filterKeys = (obj, cond) =>
 const mapKeys =(obj, transform) =>
     Object.keys(obj).reduce((res, key) => ((res[transform(key)] = obj[key]), res), {});
 
-const reduceKeys = (obj, cond, init = '') =>
-    Object.keys(obj).reduce((acc, key) => cond(acc, key), init);
+const reduceKeys = (obj, cond, start) =>
+    start === undefined ? Object.keys(obj).reduce((prev, curr) => cond(prev, curr)) : Object.keys(obj).reduce((prev, curr) => cond(prev, curr), start);
 
 const nutrients = { carbohydrates: 12, protein: 20, fat: 5 }
 
