@@ -1,52 +1,35 @@
-function throttle(fn, delay) {
-    let lastCall = 0;
-    
-    return function(...args) {
-        const now = Date.now();
-        if (now - lastCall >= delay) {
-        lastCall = now;
-        return fn.apply(this, args);
-        }
-    };
-}
-
-function opThrottle(fn, delay, { leading = true, trailing = true } = {}) {
-    let lastCallTime = 0;
-    let timeout = null;
-    let lastArgs;
-    let lastContext;
+function throttle(callback, interval) {
+    let lastCall = true;
   
-    function invoke() {
-      lastCallTime = Date.now();
-      timeout = null;
-      fn.apply(lastContext, lastArgs);
-      lastArgs = lastContext = null;
-    }
+    return (...args) => {
+      if (!lastCall) return;
   
-    return function (...args) {
-      const now = Date.now();
-  
-      const isFirstCall = !lastCallTime;
-      const remaining = delay - (now - lastCallTime);
-  
-      lastArgs = args;
-      lastContext = this;
-  
-      if (isFirstCall && !leading) {
-        lastCallTime = now;
-      }
-  
-      if (remaining <= 0) {
-        if (timeout) {
-          clearTimeout(timeout);
-          timeout = null;
-        }
-        lastCallTime = now;
-        fn.apply(lastContext, lastArgs);
-        lastArgs = lastContext = null;
-      } else if (trailing && !timeout) {
-        timeout = setTimeout(invoke, remaining);
-      }
+      lastCall = false;
+      callback.apply(this, args);
+      setTimeout(() => lastCall = true, interval);
     };
   }
   
+  function opThrottle(func, wait, option = {}) {
+    let timer = null, last = null;
+  
+    function setTimer() {
+      timer = setTimeout(() => {
+        timer = null;
+        if (last && option.trailing) {
+          func.apply(last.context, last.args);
+          setTimer();
+        }
+        last = null;
+      }, wait);
+    }
+  
+    return function throttled(...args) {
+      if (timer === null) {
+        option.leading ? func.apply(this, args) : last = { args, context: this };
+        setTimer();
+      } else {
+        last = { args, context: this };
+      }
+    };
+  }
