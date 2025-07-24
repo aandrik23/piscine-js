@@ -11,39 +11,42 @@ function throttle(fn, delay) {
 }
 
 function opThrottle(fn, delay, { leading = true, trailing = true } = {}) {
-    let timer = null;
     let lastCallTime = 0;
-    let lastArgs = null;
-    let lastThis = null;
-    let shouldCallLater = false;
+    let timeout = null;
+    let lastArgs;
+    let lastContext;
+  
+    function invoke() {
+      lastCallTime = Date.now();
+      timeout = null;
+      fn.apply(lastContext, lastArgs);
+      lastArgs = lastContext = null;
+    }
   
     return function (...args) {
       const now = Date.now();
   
-      if (!lastCallTime && !leading) {
+      const isFirstCall = !lastCallTime;
+      const remaining = delay - (now - lastCallTime);
+  
+      lastArgs = args;
+      lastContext = this;
+  
+      if (isFirstCall && !leading) {
         lastCallTime = now;
       }
   
-      const remaining = delay - (now - lastCallTime);
-      lastArgs = args;
-      lastThis = this;
-  
       if (remaining <= 0) {
-        if (timer) {
-          clearTimeout(timer);
-          timer = null;
+        if (timeout) {
+          clearTimeout(timeout);
+          timeout = null;
         }
-  
         lastCallTime = now;
-        fn.apply(lastThis, lastArgs);
-      } else if (trailing && !timer) {
-        timer = setTimeout(() => {
-          lastCallTime = leading ? Date.now() : 0;
-          timer = null;
-          if (trailing) {
-            fn.apply(lastThis, lastArgs);
-          }
-        }, remaining);
+        fn.apply(lastContext, lastArgs);
+        lastArgs = lastContext = null;
+      } else if (trailing && !timeout) {
+        timeout = setTimeout(invoke, remaining);
       }
     };
   }
+  
