@@ -20,7 +20,6 @@ function opThrottle(fn, delay, { leading = true, trailing = true } = {}) {
     return function (...args) {
       const now = Date.now();
   
-      // Αν είναι πρώτη φορά και leading: false, μην καλέσεις fn
       if (!lastCallTime && !leading) {
         lastCallTime = now;
       }
@@ -38,7 +37,6 @@ function opThrottle(fn, delay, { leading = true, trailing = true } = {}) {
         lastCallTime = now;
         fn.apply(lastThis, lastArgs);
       } else if (trailing && !timer) {
-        // Προγραμματίζουμε trailing εκτέλεση
         timer = setTimeout(() => {
           lastCallTime = leading ? Date.now() : 0;
           timer = null;
