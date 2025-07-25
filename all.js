@@ -1,13 +1,5 @@
-function all(obj) {
-    const keys = Object.keys(obj);
-    const entries = keys.map(key => [key, Promise.resolve(obj[key])]);
-  
-    return Promise.all(entries.map(([_, promise]) => promise)).then(values => {
-      const result = {};
-      keys.forEach((key, i) => {
-        result[key] = values[i];
-      });
-      return result;
-    });
-  }
-  
+async function all(all_objs = {}) {
+    const res = {};
+    for (const key in all_objs) res[key] = await all_objs[key];
+    return res;
+}
