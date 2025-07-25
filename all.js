@@ -1,12 +1,13 @@
 function all(obj) {
     const keys = Object.keys(obj);
-    const promises = keys.map(key => Promise.resolve(obj[key]));
-
-    return Promise.all(promises).then(resolvedvalues => {
-        const result = {};
-        keys.forEach((key, index) => {
-            result[key] = resolvedvalues[index];
-        });
-        return result;
+    const entries = keys.map(key => [key, Promise.resolve(obj[key])]);
+  
+    return Promise.all(entries.map(([_, promise]) => promise)).then(values => {
+      const result = {};
+      keys.forEach((key, i) => {
+        result[key] = values[i];
+      });
+      return result;
     });
-    }
+  }
+  
