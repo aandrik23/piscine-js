@@ -1,51 +1,45 @@
-import { readFileSync, writeFileSync, statSync } from 'fs';
-import { join } from 'path';
+import { readdir } from 'node:fs/promises';
+import { readFile } from 'node:fs/promises';
+import { writeFile } from 'node:fs/promises';
 
-const inputPath = process.argv[2];
 
-if (!inputPath) {
-  console.error("Please provide the guests file or directory.");
-  process.exit(1);
+let path = "."
+
+if ((process.argv).length >= 3) {
+
+    path = process.argv[2]
 }
-
-let content = '';
 
 try {
-  const stats = statSync(inputPath);
 
-  if (stats.isDirectory()) {
-    // If it's a directory, treat as no input — write empty vip.txt and exit
-    writeFileSync('vip.txt', '', 'utf8');
-    process.exit(0);
-  }
+    const guests = await readdir(path)
+    
+    let guestlist= []
+    
+    
+        for ( const guest of guests) {
 
-  // Otherwise, read file content
-  content = readFileSync(inputPath, 'utf8');
+            const filePath = `${path}/${guest}`;
+    
+            const rawContent = await readFile(filePath, { encoding: 'utf8' });
+            
+            const content = JSON.parse(rawContent);
 
-} catch (err) {
-  console.error("Failed to read file:", err.message);
-  process.exit(1);
+            if (content.answer === "yes") {
+        
+                const name = guest.split("_")[0]
+                const surname = guest.split("_")[1].split(".")[0]
+                guestlist.push(surname.concat(" ",name))
+                  
+            }
+        }
+        
+    guestlist.sort()
+    const numberedGuestlist = guestlist.map((name, index) => `${index + 1}. ${name}`);
+  
+     await writeFile('vip.txt', numberedGuestlist.join('\n'));
+
+   
+} catch(err) {
+    console.log(err)
 }
-
-const lines = content.trim().split('\n').filter(Boolean);
-
-const yesGuests = lines
-  .map(line => {
-    const [fullName, answer] = line.split(',');
-    if (!fullName || !answer) return null;
-    const [firstName, lastName] = fullName.trim().split(' ');
-    return {
-      firstName,
-      lastName,
-      answer: answer.trim().toUpperCase()
-    };
-  })
-  .filter(g => g && g.answer === 'YES');
-
-yesGuests.sort((a, b) => a.lastName.localeCompare(b.lastName));
-
-const output = yesGuests
-  .map((g, i) => `${i + 1}. ${g.lastName} ${g.firstName}`)
-  .join('\n');
-
-writeFileSync('vip.txt', output, 'utf8');
