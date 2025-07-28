@@ -1,22 +1,33 @@
-import { readFileSync, writeFileSync } from 'fs';
+import { readFileSync, writeFileSync, statSync } from 'fs';
+import { join } from 'path';
 
-const fileName = process.argv[2];
+const inputPath = process.argv[2];
 
-if (!fileName) {
-  console.error("Please provide the guests file.");
+if (!inputPath) {
+  console.error("Please provide the guests file or directory.");
   process.exit(1);
 }
 
-let data;
+let content = '';
 
 try {
-  data = readFileSync(fileName, 'utf8');
+  const stats = statSync(inputPath);
+
+  if (stats.isDirectory()) {
+    // If it's a directory, treat as no input — write empty vip.txt and exit
+    writeFileSync('vip.txt', '', 'utf8');
+    process.exit(0);
+  }
+
+  // Otherwise, read file content
+  content = readFileSync(inputPath, 'utf8');
+
 } catch (err) {
   console.error("Failed to read file:", err.message);
   process.exit(1);
 }
 
-const lines = data.trim().split('\n');
+const lines = content.trim().split('\n').filter(Boolean);
 
 const yesGuests = lines
   .map(line => {
@@ -37,5 +48,4 @@ const output = yesGuests
   .map((g, i) => `${i + 1}. ${g.lastName} ${g.firstName}`)
   .join('\n');
 
-// save to vip.txt
 writeFileSync('vip.txt', output, 'utf8');
